@@ -1,4 +1,4 @@
-# Nancy.Serialization.NetJSON [![NuGet Version](http://img.shields.io/nuget/v/Nancy.Serialization.NetJSON.svg?style=flat)](https://www.nuget.org/packages/Nancy.Serialization.NetJSON/) [![Build status](https://ci.appveyor.com/api/projects/status/8m1agvwx1qukrrc1)](https://ci.appveyor.com/project/jbattermann/nancy-serialization-NetJSON)
+# Nancy.Serialization.NetJSON [![NuGet Version](http://img.shields.io/nuget/v/Nancy.Serialization.NetJSON.svg?style=flat)](https://www.nuget.org/packages/Nancy.Serialization.NetJSON/) [![Build status](https://ci.appveyor.com/api/projects/status/ptv6byra1nq6t614)](https://ci.appveyor.com/project/jbattermann/nancy-serialization-netjson)
 
 
 Implementations of the ISerialization and IBodyDeserializer interfaces, based on [NetJSON](https://github.com/rpgmaker/NetJSON), for [Nancy](http://nancyfx.org). Because more and more [Performance](https://github.com/rpgmaker/NetJSON#benchmark-how-fast) never hurts.
