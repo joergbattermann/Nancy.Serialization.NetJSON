@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <id>Nancy.Serialization.NetJSON</id>
+    <version>0.0.0</version> <!-- Overridden by Appveyor Build Task -->
+    <authors>Joerg Battermann</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Provides JSON (De-)Serialization support for Nancy using NetJSON.</description>
+    <summary>This is a NetJSON based Json (De-)Serializer for Nancy. Nancy is a lightweight web framework for the .Net platform, inspired by Sinatra.</summary>
+    <releaseNotes>
+* 0.x Version(s) are initial ones were not everything might be working as expected, yet.
+    </releaseNotes>
+    <language>en-US</language>
+    <copyright>Joerg Battermann</copyright>
+    <iconUrl>http://nancyfx.org/nancy-nuget.png</iconUrl>
+    <licenseUrl>https://github.com/jbattermann/Nancy.Serialization.NetJSON/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/jbattermann/Nancy.Serialization.NetJSON</projectUrl>
+    <dependencies>
+      <dependency id="Nancy" version="[0.23,]" />
+      <dependency id="NetJSON" version="[1.0.5,]" />
+    </dependencies>
+    <tags>Nancy Json NetJSON Serialization Serializer Deserialization Deserializer Performance</tags>
+  </metadata>
+  <files>
+    <file src="Nancy.Serialization.NetJSON\bin\Release\Nancy.Serialization.NetJSON.dll" target="lib\net40" />
+    <file src="Nancy.Serialization.NetJSON\bin\Release\Nancy.Serialization.NetJSON.pdb" target="lib\net40" />
+    <file src="Nancy.Serialization.NetJSON\bin\Release\Nancy.Serialization.NetJSON.xml" target="lib\net40" />
+    <file src="Nancy.Serialization.NetJSON\**\*.cs" target="src" />
+  </files>
+</package>
