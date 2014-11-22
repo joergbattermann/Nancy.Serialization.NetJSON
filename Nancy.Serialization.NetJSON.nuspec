@@ -18,7 +18,7 @@
     <projectUrl>https://github.com/jbattermann/Nancy.Serialization.NetJSON</projectUrl>
     <dependencies>
       <dependency id="Nancy" version="[0.23,]" />
-      <dependency id="NetJSON" version="[1.0.5.2,]" />
+      <dependency id="NetJSON" version="[1.0.5.4,]" />
     </dependencies>
     <tags>Nancy Json NetJSON Serialization Serializer Deserialization Deserializer Performance</tags>
   </metadata>
