@@ -16,7 +16,7 @@ namespace Nancy.Serialization.NetJSON
     /// </summary>
     public class NetJSONBodyDeserializer : IBodyDeserializer
     {
-        private static readonly ConcurrentDictionary<Type, PropertyInfo[]> CachedPropertyInformation = new ConcurrentDictionary<Type, PropertyInfo[]>();
+        private static readonly ConcurrentDictionary<Type, BindingMemberInfo[]> CachedBindingMemberInfo = new ConcurrentDictionary<Type, BindingMemberInfo[]>();
         private static readonly ConcurrentDictionary<Type, object> CachedDefaultValues = new ConcurrentDictionary<Type, object>();
 
         #region Implementation of IBodyDeserializer
@@ -49,23 +49,24 @@ namespace Nancy.Serialization.NetJSON
                 deserializedObject = global::NetJSON.NetJSON.Deserialize(context.DestinationType, inputStream.ReadToEnd());
 
                 // .. then, due to NancyFx's support for blacklisted properties, we need to get the propertyInfo first (read from cache if possible)
-                PropertyInfo[] propertyInfo;
                 var comparisonType = GetTypeForBlacklistComparison(context.DestinationType);
-                if (CachedPropertyInformation.TryGetValue(comparisonType, out propertyInfo) == false)
+
+                BindingMemberInfo[] bindingMemberInfo;
+                if (CachedBindingMemberInfo.TryGetValue(comparisonType, out bindingMemberInfo) == false)
                 {
-                    propertyInfo = comparisonType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                    bindingMemberInfo = comparisonType.GetProperties(BindingFlags.Public | BindingFlags.Instance).Select(p => new BindingMemberInfo(p)).ToArray();
                     // the following is somewhat dirty but oh well
-                    SpinWait.SpinUntil(() => CachedPropertyInformation.ContainsKey(comparisonType) || CachedPropertyInformation.TryAdd(comparisonType, propertyInfo));
+                    SpinWait.SpinUntil(() => CachedBindingMemberInfo.ContainsKey(comparisonType) || CachedBindingMemberInfo.TryAdd(comparisonType, bindingMemberInfo));
                 }
 
                 // ... and then compare whether there's anything blacklisted
-                if (propertyInfo.Except(context.ValidModelProperties).Any())
+                if (bindingMemberInfo.Except(context.ValidModelBindingMembers).Any())
                 {
                     // .. if so, take object and basically eradicated value(s) for the blacklisted properties.
                     // this is inspired by https://raw.githubusercontent.com/NancyFx/Nancy.Serialization.JsonNet/master/src/Nancy.Serialization.JsonNet/JsonNetBodyDeserializer.cs
                     // but again.. only *inspired*.
-                    // The main difference is, that the instance NetJSON returned from the JSON.Deserialize() call will be wiped clean, no second/new instance will be created.
-                    return CleanBlacklistedProperties(context, deserializedObject, propertyInfo);
+                    // The main difference is, that the instance Jil returned from the JSON.Deserialize() call will be wiped clean, no second/new instance will be created.
+                    return CleanBlacklistedMembers(context, deserializedObject, bindingMemberInfo);
                 }
 
                 return deserializedObject;
@@ -93,20 +94,20 @@ namespace Nancy.Serialization.NetJSON
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="deserializedObject">The deserialized object.</param>
-        /// <param name="cachedPropertyInfo">The cached property information.</param>
+        /// <param name="cachedBindingMemberInfo">The cached property information.</param>
         /// <returns></returns>
-        private static object CleanBlacklistedProperties(BindingContext context, object deserializedObject, PropertyInfo[] cachedPropertyInfo)
+        private static object CleanBlacklistedMembers(BindingContext context, object deserializedObject, BindingMemberInfo[] cachedBindingMemberInfo)
         {
             if (context.DestinationType.IsCollection())
             {
                 foreach (var enumerableElement in (IEnumerable)deserializedObject)
                 {
-                    CleanPropertyValues(context, enumerableElement, cachedPropertyInfo);
+                    CleanPropertyValues(context, enumerableElement, cachedBindingMemberInfo);
                 }
             }
             else
             {
-                CleanPropertyValues(context, deserializedObject, cachedPropertyInfo);
+                CleanPropertyValues(context, deserializedObject, cachedBindingMemberInfo);
             }
 
             return deserializedObject;
@@ -117,12 +118,12 @@ namespace Nancy.Serialization.NetJSON
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="targetObject">The target object.</param>
-        /// <param name="cachedPropertyInfo">The cached property information.</param>
-        private static void CleanPropertyValues(BindingContext context, object targetObject, IEnumerable<PropertyInfo> cachedPropertyInfo)
+        /// <param name="cachedBindingMemberInfo">The cached property information.</param>
+        private static void CleanPropertyValues(BindingContext context, object targetObject, IEnumerable<BindingMemberInfo> cachedBindingMemberInfo)
         {
-            foreach (var blacklistedProperty in cachedPropertyInfo.Except(context.ValidModelProperties))
+            foreach (var blacklistedProperty in cachedBindingMemberInfo.Except(context.ValidModelBindingMembers))
             {
-                blacklistedProperty.SetValue(targetObject, GetDefaultForType(blacklistedProperty.PropertyType), null);
+                blacklistedProperty.SetValue(targetObject, GetDefaultForType(blacklistedProperty.PropertyType));
             }
         }
 
@@ -138,7 +139,7 @@ namespace Nancy.Serialization.NetJSON
             if (CachedDefaultValues.TryGetValue(targetType, out defaultValue) == false)
             {
                 defaultValue = targetType.IsValueType ? Activator.CreateInstance(targetType) : null;
-                
+
                 // the following is somewhat dirty .. again.. but oh well.. again
                 SpinWait.SpinUntil(() => CachedDefaultValues.ContainsKey(targetType) || CachedDefaultValues.TryAdd(targetType, defaultValue));
             }

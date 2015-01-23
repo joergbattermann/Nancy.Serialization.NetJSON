@@ -68,7 +68,7 @@ namespace Nancy.Serialization.NetJSON.Tests
             var context = new BindingContext
             {
                 DestinationType = typeof(Stuff),
-                ValidModelProperties = typeof(Stuff).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(propertyInfo => propertyInfo.Name != "SomeString"),
+                ValidModelBindingMembers = typeof(Stuff).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(propertyInfo => propertyInfo.Name != "SomeString").Select(p => new BindingMemberInfo(p))
             };
 
             // Given
