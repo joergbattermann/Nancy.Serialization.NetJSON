@@ -4,16 +4,16 @@ namespace Nancy.Serialization.NetJSON
 {
     public static class Options
     {
-        /// <summary>
-        /// This merely forwards the provided value to <see cref="NetJSON.UseISOFormat" />.
-        /// As that property does not expose a getter, no one can reliably be provided here, too.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if ISO8601 date time format shall be used; otherwise, <c>false</c> (which means ticks will be used).
-        /// </value>
-        public static bool UseIso8601DateTimeFormat
+		/// <summary>
+		/// This merely forwards the provided value to <see cref="NetJSON.DateFormat" />.
+		/// As that property does not expose a getter, no one can reliably be provided here, too.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if ISO8601 date time format shall be used; otherwise, <c>false</c> (which means ticks will be used).
+		/// </value>
+		public static bool UseIso8601DateTimeFormat
         {
-            set { global::NetJSON.NetJSON.UseISOFormat = value; }
+            set { global::NetJSON.NetJSON.DateFormat = value ? NetJSONDateFormat.ISO : NetJSONDateFormat.Default; }
         }
 
         /// <summary>
