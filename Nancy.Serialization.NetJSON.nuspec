@@ -14,8 +14,8 @@
     <licenseUrl>https://github.com/jbattermann/Nancy.Serialization.NetJSON/blob/master/LICENSE.md</licenseUrl>
     <projectUrl>https://github.com/jbattermann/Nancy.Serialization.NetJSON</projectUrl>
     <dependencies>
-      <dependency id="Nancy" version="[1.4.0,1.9.9]" />
-      <dependency id="NetJSON" version="[1.0.14,]" />
+      <dependency id="Nancy" version="[1.4.1,1.9.9]" />
+      <dependency id="NetJSON" version="[1.0.14.1,]" />
     </dependencies>
     <tags>Nancy Json NetJSON Serialization Serializer Deserialization Deserializer Performance</tags>
   </metadata>
