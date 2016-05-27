@@ -19,7 +19,7 @@ Moreover thanks alot to [rpgmaker](https://github.com/rpgmaker) for his work on 
 
 ## Copyright
 
-Copyright © 2014 Jörg Battermann
+Copyright © 2016 Jörg Battermann
 
 ## License
 
